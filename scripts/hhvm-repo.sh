@@ -6,7 +6,7 @@ HHVM_REPO=${HHVM_REPO:-/mnt/hhvm}
 HHVM_CFG=${HHVM_CFG:-/etc/hhvm/server.ini}
 REPO_FILE=${HHVM_FILE:-hhvm.hhbc}
 HHVM_FORCE=${HHVM_FORCE:-0}
-HHVM_LOCK=$HHVM_REPO/repo.lock
+HHVM_LOCK=$HHVM_SYNC_FOLDER/repo.lock
 
 ##############
 
@@ -14,9 +14,11 @@ mkdir -p $HHVM_REPO
 if [[ -d $WWW_ROOT ]]; then
   if [[ -f "$HHVM_REPO/$REPO_FILE" ]]; then
       echo HHVM BC Already Exist
-      if [[ "$HHVM_FORCE" == "0" ]]; then
+      if [[ "$HHVM_FORCE" == "1" ]]; then
         echo Forcing Rebuild
         rm -f $HHVM_LOCK
+      else
+        exit 0
       fi
   fi
   if [[ -d $HHVM_SYNC_FOLDER ]] && [[ "$HHVM_SYNC" == "1" ]]; then
@@ -28,13 +30,17 @@ if [[ -d $WWW_ROOT ]]; then
     echo HHVM Repo File Locked at `cat $HHVM_LOCK`
     exit 2
   fi
-  date > $HHVM_LOCK
+  if [[ -d $HHVM_SYNC_FOLDER ]] && [[ "$HHVM_SYNC" == "1" ]]; then
+    date > $HHVM_LOCK
+  fi
   HHVM_BC=`echo $HHVM_REPO|sed -e 's/\//\\\\\//g'`\\/$REPO_FILE
   mkdir -p $HHVM_REPO
   sed -i "s/.*hhvm.repo.central.path.*/hhvm.repo.central.path=${HHVM_BC}/g" $HHVM_CFG
   hhvm-repo-mode enable $WWW_ROOT
-  rsync -av --progress --delete $HHVM_REPO/ $HHVM_SYNC_FOLDER/
-  rm -f $HHVM_LOCK
+  if [[ -d $HHVM_SYNC_FOLDER ]] && [[ "$HHVM_SYNC" == "1" ]]; then
+    rsync -av --progress --delete $HHVM_REPO/ $HHVM_SYNC_FOLDER/
+    rm -f $HHVM_LOCK
+  fi
 else
   echo $WWW_ROOT does not Exist
   exit 2
