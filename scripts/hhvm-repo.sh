@@ -7,6 +7,8 @@ HHVM_CFG=${HHVM_CFG:-/etc/hhvm/server.ini}
 REPO_FILE=${HHVM_FILE:-hhvm.hhbc}
 HHVM_FORCE=${HHVM_FORCE:-0}
 HHVM_LOCK=$HHVM_SYNC_FOLDER/repo.lock
+HHVM_POSTFIX=${HHVM_POSTFIX:-0}
+HHVM_POSTFIX_CONFIG=${HHVM_POSTFIX_CONFIG:-/postfix_cfg}
 
 ##############
 
@@ -20,6 +22,10 @@ if [[ -d $WWW_ROOT ]]; then
       else
         exit 0
       fi
+  fi
+  if [[ "$HHVM_POSTFIX" == "1" ]] && [[ -d $HHVM_POSTFIX_CONFIG ]]; then
+    echo Postfix Configuration OK
+    rsync -av --progress --delete $HHVM_POSTFIX_CONFIG/ /etc/postfix/
   fi
   if [[ -d $HHVM_SYNC_FOLDER ]] && [[ "$HHVM_SYNC" == "1" ]]; then
     echo Sync $HHVM_SYNC_FOLDER to $HHVM_REPO
