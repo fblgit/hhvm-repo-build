@@ -28,6 +28,7 @@ if [[ -d $WWW_ROOT ]]; then
     echo Postfix Configuration OK
     rsync -av --progress --delete $HHVM_POSTFIX_CONFIG/ /etc/postfix/
     echo $HHVM_MAILNAME > /etc/mailname
+    service postfix start
   fi
   if [[ -d $HHVM_SYNC_FOLDER ]] && [[ "$HHVM_SYNC" == "1" ]]; then
     echo Sync $HHVM_SYNC_FOLDER to $HHVM_REPO
