@@ -36,7 +36,7 @@ if [[ "$CACHEFS_ENABLED" == "1" ]] && [[ -d $CACHEFS_TARGET ]] && [[ -d $CACHEFS
   else
     echo Error downloading CacheFS
   fi
-  if [[ -d "$FOLD" ]]; then
+  if [[ -d "/root/$FOLD" ]]; then
     cd /root/$FOLD && ./cachefs.py ${CACHEFS_MOUNT} -o target=${CACHEFS_TARGET},cache=${CACHEFS_CACHE} && cd -
     echo Fusion CacheFS enabled $CACHEFS_TARGET accelerated to $CACHEFS_MOUNT via $CACHEFS_CACHE
   else
