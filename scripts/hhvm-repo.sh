@@ -19,7 +19,7 @@ CACHEFS_URL=${CACHEFS_URL:-"https://github.com/cconstantine/CacheFS/archive/mast
 ##############
 if [[ "$CACHEFS_ENABLED" == "1" ]] && [[ -d $CACHEFS_TARGET ]] && [[ -d $CACHEFS_CACHE ]]; then
   if [[ ! -d $CACHEFS_MOUNT ]]; then
-    mkdir -pf $CACHEFS_MOUNT
+    mkdir -p $CACHEFS_MOUNT
     echo Created accelerated folder $CACHEFS_MOUNT
   fi
   wget -qO /root/cachefs.zip $CACHEFS_URL
