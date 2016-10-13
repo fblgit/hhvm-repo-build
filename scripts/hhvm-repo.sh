@@ -10,9 +10,36 @@ HHVM_LOCK=$HHVM_SYNC_FOLDER/repo.lock
 HHVM_POSTFIX=${HHVM_POSTFIX:-0}
 HHVM_POSTFIX_CONFIG=${HHVM_POSTFIX_CONFIG:-/postfix_cfg}
 HHVM_MAILNAME=${HHVM_MAILNAME:-localhost}
+CACHEFS_ENABLED=${CACHEFS_ENABLED:-0}
+CACHEFS_TARGET=${CACHEFS_TARGET:-/mnt/cache}
+CACHEFS_CACHE=${CACHEFS_CACHE:-/mnt/shm}
+CACHEFS_MOUNT=${CACHEFS_MOUNT:-/var/www}
+CACHEFS_URL=${CACHEFS_URL:-"https://github.com/cconstantine/CacheFS/archive/master.zip"}
 
 ##############
-
+if [[ "$CACHEFS_ENABLED" == "1" ]] && [[ -d $CACHEFS_TARGET ]] && [[ -d $CACHEFS_CACHE ]]; then
+  if [[ ! -d $CACHEFS_MOUNT ]]; then
+    mkdir -pf $CACHEFS_MOUNT
+    echo Created accelerated folder $CACHEFS_MOUNT
+  fi
+  wget -qO /root/cachefs.zip $CACHEFS_URL
+  if [[ -f /root/cachefs.zip ]]; then
+    cd /root
+    FOLD=`unzip cachefs.zip | grep 'creating:' | awk '{print $2}' | head -1`
+    rm -f /root/cachefs.zip
+    cd -
+  else
+    echo Error downloading CacheFS
+  fi
+  if [[ -d "$FOLD" ]]; then
+    cd /root/$FOLD && ./cachefs.py ${CACHEFS_MOUNT} -o target=${CACHEFS_TARGET},cache=${CACHEFS_CACHE} && cd -
+    echo Fusion CacheFS enabled $CACHEFS_TARGET accelerated to $CACHEFS_MOUNT via $CACHEFS_CACHE
+  else
+    echo Error installing CacheFS
+  fi
+else
+  echo CacheFS disabled
+fi
 mkdir -p $HHVM_REPO
 if [[ -d $WWW_ROOT ]]; then
   if [[ -f "$HHVM_REPO/$REPO_FILE" ]]; then

@@ -1,8 +1,8 @@
-FROM ubuntu:trusty
+FROM phusion/baseimage:0.9.18
 
 # Installing packages
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get -qy install software-properties-common wget supervisor rsync postfix mailutils
+RUN apt-get -qy install software-properties-common wget supervisor rsync postfix mailutils unzip python-fuse libfuse2
 RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
 RUN add-apt-repository "deb http://dl.hhvm.com/ubuntu $(lsb_release -sc) main"
 RUN apt-get update
