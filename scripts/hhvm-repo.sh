@@ -22,12 +22,17 @@ if [[ "$CACHEFS_ENABLED" == "1" ]] && [[ -d $CACHEFS_TARGET ]] && [[ -d $CACHEFS
     mkdir -p $CACHEFS_MOUNT
     echo Created accelerated folder $CACHEFS_MOUNT
   fi
-  wget -qO /root/cachefs.zip $CACHEFS_URL
+  if [[ ! -f "/root/cachefs.zip" ]]; then
+    wget -qO /root/cachefs.zip $CACHEFS_URL
+  fi
   if [[ -f /root/cachefs.zip ]]; then
-    cd /root
-    FOLD=`unzip cachefs.zip | grep 'creating:' | awk '{print $2}' | head -1`
-    rm -f /root/cachefs.zip
-    cd -
+    if [[ -d "/root/CacheFS-master" ]]; then
+      FOLD=/root/CacheFS-master
+    else
+      cd /root
+      FOLD=`unzip cachefs.zip | grep 'creating:' | awk '{print $2}' | head -1`
+      cd -
+    fi
   else
     echo Error downloading CacheFS
   fi
