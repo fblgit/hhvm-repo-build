@@ -27,7 +27,7 @@ if [[ "$CACHEFS_ENABLED" == "1" ]] && [[ -d $CACHEFS_TARGET ]] && [[ -d $CACHEFS
   fi
   if [[ -f /root/cachefs.zip ]]; then
     if [[ -d "/root/CacheFS-master" ]]; then
-      FOLD=/root/CacheFS-master
+      FOLD=CacheFS-master
     else
       cd /root
       FOLD=`unzip cachefs.zip | grep 'creating:' | awk '{print $2}' | head -1`
