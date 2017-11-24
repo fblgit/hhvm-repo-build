@@ -76,6 +76,8 @@ if [[ -d $WWW_ROOT ]]; then
   fi
   HHVM_BC=`echo $HHVM_REPO|sed -e 's/\//\\\\\//g'`\\/$REPO_FILE
   mkdir -p $HHVM_REPO
+  # Cleanup Old HHVM Data. HHVM Repo script seems to have some bug, where old data in this HHBC makes the repo build to fail.
+  rm -f /root/.hhvm.hhbc
   sed -i "s/.*hhvm.repo.central.path.*/hhvm.repo.central.path=${HHVM_BC}/g" $HHVM_CFG
   hhvm-repo-mode enable $WWW_ROOT
   if [[ -d $HHVM_SYNC_FOLDER ]] && [[ "$HHVM_SYNC" == "1" ]]; then
