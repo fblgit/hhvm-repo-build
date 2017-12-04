@@ -6,7 +6,7 @@ RUN apt-get -qy install software-properties-common wget supervisor rsync postfix
 RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
 RUN add-apt-repository "deb http://dl.hhvm.com/ubuntu $(lsb_release -sc) main"
 RUN apt-get update
-RUN apt-get -y install hhvm
+RUN apt-get -y --force install hhvm
 RUN apt-get clean && apt-get autoremove -yq --purge
 
 # Scripts
