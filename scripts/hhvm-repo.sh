@@ -83,7 +83,7 @@ if [[ -d $WWW_ROOT ]]; then
     rm -f $HHVM_REPO/$REPO_FILE
   fi
   hhvm-repo-mode enable $WWW_ROOT
-  if [[ -d $HHVM_SYNC_FOLDER ]] && [[ "$HHVM_SYNC" == "1" ]] && [ "$HHVM_FORCE" == "0"]; then
+  if [[ -d $HHVM_SYNC_FOLDER ]] && [[ "$HHVM_SYNC" == "1" ]] && [[ "$HHVM_FORCE" == "0"]]; then
     rsync -av --progress --delete $HHVM_REPO/ $HHVM_SYNC_FOLDER/
     rm -f $HHVM_LOCK
   fi
